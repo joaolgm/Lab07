@@ -10,14 +10,33 @@ import java.util.HashMap;
 
 public class LojaController {
 	private HashMap<String, Usuario> usuarios;
+	UsuarioFactory user;
+	
+	
+	public Usuario criaUsuario(String nome, String login, int dinheiro) throws Exception {
+		if(nome.equals("") || nome == null) {
+			throw new Exception("Nome nao pode ser nulo ou invalido");
+		}
+		if(login.equals("") || login == null) {
+			throw new Exception("Login nao pode ser nulo ou invalido");
+		}
+		if(dinheiro < 0) {
+			throw new Exception("Dinheiro nao pode ser menor que zero");
+		}
+		Usuario user = new Noob(nome, login, dinheiro, 0);
+		return user;
+	}
 
 	/**
 	 * Metodo para adicionar usuarios na loja utilizando o objeto usuario.
 	 * 
 	 * @param usuario
 	 */
-	public void adicionaUsuario(Usuario usuario) {
-		usuarios.put(usuario.getLogin(), usuario);
+	public void adicionaUsuario(String login) {
+		if(usuarios.containsKey(login)) {
+			Usuario usuario = criaUsuario(, login, );
+			usuarios.put(login, usuario);
+		}
 	}
 
 	/**
@@ -27,9 +46,10 @@ public class LojaController {
 	 * @param dinheiro
 	 * @throws Exception
 	 */
-	public void adicionaDinheiro(Usuario usuario, int dinheiro) throws Exception {
+	public void adicionaDinheiro(String login, int dinheiro) throws Exception {
 		try {
-			if (usuarios.containsKey(usuario.getLogin())) {
+			if (usuarios.containsKey(login)) {
+				Usuario usuario = usuarios.get(login);
 				usuario.setDinheiro(dinheiro);
 			}
 		} catch (Exception e) {
@@ -45,14 +65,14 @@ public class LojaController {
 	 * @param preco
 	 * @throws Exception
 	 */
-	public void venderJogos(String jogo, String login, int preco) throws Exception {
+	public void venderJogos(String jogo, String login, int preco, String tipo) throws Exception {
 		try {
 			if (usuarios.containsKey(login)) {
 				Usuario usuario = usuarios.get(login);
-				Jogo jogo = cria
 				if (usuario.getDinheiro() >= preco) {
-					usuario.setDinheiro((usuario.getDinheiro() - preco));
-					usuario.jogosComprados.add(jogo);
+					//Jogo game = criaJogo(jogo, preco, tipo);
+					usuario.setDinheiro(usuario.getDinheiro() - preco);
+					//usuario.jogosComprados.add(game);
 				}
 			}
 		} catch (Exception e) {
